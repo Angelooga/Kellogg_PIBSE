@@ -106,7 +106,6 @@ class CreateGraphs:
         :param kwargs:
         :return:
         """
-        st.write(self.aux_data["df"])
 
         fig = px.bar(data_frame=self.aux_data["df"], x=self.aux_data["x"], y=self.aux_data["y"],
                      orientation=self.aux_data["orientation"],
