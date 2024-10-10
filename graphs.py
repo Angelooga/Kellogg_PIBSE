@@ -68,7 +68,8 @@ class CreateGraphs:
                            "Aprendizaje socioemocional en la comunidad educativa"],
             "Prioridad": ["Kellogg's Priority", "Authorized Extension", "Other"],
             "Entidad": ["Campeche", "Quintana Roo", "Yucatán", "No data"],
-            "Tipo": ["Professionals", "SLT", "Professionals / SLT", "Teenagers"],
+            "Tipo": ["Professionals", "Systemic Leadership Training", "Professionals/Systemic Leadership Training",
+                     "Teenagers"],
             "Ben_directo": ["25", "1"]
         }
         self.lines = {
