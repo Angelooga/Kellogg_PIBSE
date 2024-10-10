@@ -37,7 +37,7 @@ class DashboardOutcomes(CreateDashboard):
                     "orientation": "v",
                     "order": None,
                     "color": "Constructo",
-                    "title": "Outcomes Graph: Systematic Leadership Training",
+                    "title": "Outcomes Graph: Systemic Leadership Training",
                     "text": "Significancia",
                     "text_dtype": "str",
                     "xaxis_name": "Scale",
