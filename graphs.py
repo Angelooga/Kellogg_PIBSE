@@ -15,6 +15,90 @@ class CreateGraphs:
         self.data = data
         self.aux_data = defaultdict(lambda: None, data)
         self.bg_color = "#F5F0EA"
+        self.legend_translations = {
+            "Constructo": {
+                "Autoconocimiento": "Self awareness",
+                "Bienestar psicológico": "Well being",
+                "Malestar psicológico": "Psychological distress",
+                "Prosocialidad": "Prosociality",
+                "Regulación emocional": "Emotion Regulation",
+                "Seguridad y pertenencia": "Mindsets",
+                "Creencias sobre el Aprendizaje Socioemocional": "Beliefs about  social and emotional learning",
+                "Aprendizaje socioemocional en la comunidad educativa": "School-wide SEL implementation"
+            },
+            "Ben_directo": {
+                "25": "Indirect",
+                "1": "Direct"
+            }
+        }
+        self.color_palettes = {
+            "Constructo": {
+                "Autoconocimiento": "#22314E",
+                "Regulación emocional": "#1A7F83",
+                "Malestar psicológico": "#F15D4A",
+                "Prosocialidad": "#F0BA54",
+                "Bienestar psicológico": "#4F6AA8",
+                "Creencias sobre el Aprendizaje Socioemocional": "#F59794",
+                "Seguridad y pertenencia": "#D094EA",
+                "Aprendizaje socioemocional en la comunidad educativa": "#F59794"
+            },
+            "Prioridad": {
+                "Kellogg's Priority": "#22314E",
+                "Authorized Extension": "#4A5E7A",
+                "Other": "#A7B4CD"
+            },
+            "Ben_directo": {
+                "25": "#A7B4CD",
+                "1": "#22314E"
+            },
+            "Comportamiento": {
+                "Significativo/sentido esperado": "#22314E",
+                "Significativo/sentido contrario": "#F15D4A",
+                "No significativo/sentido esperado": "#8898b3",
+                "No significativo/sentido contrario": "#F8BAB1"
+            }
+        }
+        self.color_scales = {
+            "Comportamiento": [[0, "#F9C6BF"], [0.25, "#F49184"], [0.5, "#D1DAEB"], [1, "#415E99"]]
+        }
+        self.category_orders = {
+            "Constructo": ["Malestar psicológico", "Bienestar psicológico", "Regulación emocional", "Prosocialidad",
+                           "Autoconocimiento", "Seguridad y pertenencia",
+                           "Creencias sobre el Aprendizaje Socioemocional",
+                           "Aprendizaje socioemocional en la comunidad educativa"],
+            "Prioridad": ["Kellogg's Priority", "Authorized Extension", "Other"],
+            "Entidad": ["Campeche", "Quintana Roo", "Yucatán", "No data"],
+            "Tipo": ["Professionals", "SLT", "Professionals / SLT", "Teenagers"],
+            "Ben_directo": ["25", "1"]
+        }
+        self.lines = {
+            "Effect_Size": {
+                "line": {
+                    "Small": 0.2,
+                    "Medium": 0.5,
+                    "Big": 0.8
+                },
+                "annotation": {
+                    1: {
+                        "text": "*p<0.05, **p<0.01, *** p<0.001",
+                        "x": 0,
+                        "y": -0.175
+                    }
+                }
+            },
+            "D-Cohen": {
+                "line": [-1.0, -0.5, 0.0, 0.5, 1.0],
+                "annotation": {
+                    1: {
+                        "text": "*p<0.05, **p<0.01, *** p<0.001",
+                        "x": 0,
+                        "y": -0.225
+                    }
+                }
+            }
+        }
+        self.apply_colors = {}
+        self.show_legend = {}
 
     def create_barchart(self, **kwargs):
         """
@@ -22,48 +106,63 @@ class CreateGraphs:
         :param kwargs:
         :return:
         """
+        st.write(self.aux_data["df"])
+
         fig = px.bar(data_frame=self.aux_data["df"], x=self.aux_data["x"], y=self.aux_data["y"],
                      orientation=self.aux_data["orientation"],
-                     category_orders=self.aux_data["order"],
+                     category_orders=self.category_orders,
                      color=self.aux_data["color"],
-                     color_discrete_map=self.aux_data["color_palette"],
-                     # title=self.aux_data["title"],
-                     text=self.aux_data["text"],
-                     **kwargs
+                     color_discrete_map=self.color_palettes[self.aux_data["color"]],
+                     text=self.aux_data["text"]
                      )
         fig.update_layout(xaxis_title=self.aux_data["xaxis_name"],
                           yaxis_title=self.aux_data["yaxis_name"],
                           legend_title=self.aux_data["legend_name"],
                           paper_bgcolor=self.bg_color,
                           plot_bgcolor=self.bg_color,
-                          height=550)
+                          height=550,
+                          **kwargs)
 
         if self.aux_data["text_dtype"] == "float":
             fig.update_traces(texttemplate="%{value:.2f}")
 
-        if self.aux_data["legend_elements"] is not None:
-            new_names = self.aux_data["legend_elements"]
+        translate = self.aux_data["legend_translation"]
+        if translate in self.legend_translations:
+            new_names = self.legend_translations[translate]
             fig.for_each_trace(lambda x: x.update(name=new_names[x.name],
                                                   legendgroup=new_names[x.name],
                                                   hovertemplate=x.hovertemplate.replace(x.name, new_names[x.name])
                                                   )
                                )
 
-        if self.aux_data["line"] is not None:
-            for k, i in self.aux_data["line"].items():
+        type_line = self.aux_data["line"]
+        if type_line is not None:
+            for k, i in self.lines[type_line]["line"].items():
                 if self.aux_data["orientation"] == "h":
                     fig.add_vline(x=i, line_width=1, line_dash="dash",
-                                  line_color="grey", annotation_text=k)
+                                  line_color="grey", annotation_text=k, annotation_position="bottom")
 
-        if self.aux_data["annotation"] is not None:
-            fig.add_annotation(dict(xref="paper", yref="paper", x=0, y=-0.17,
-                                    text=self.aux_data["annotation"],
-                                    showarrow=False,
-                                    textangle=0))
-            fig.add_annotation(dict(xref="paper", yref="paper", x=0, y=-0.2,
-                                    text="*p<0.05, **p<0.01, *** p<0.001",
-                                    showarrow=False,
-                                    textangle=0))
+            annotation = self.lines[type_line]["annotation"]
+            if annotation is not None:
+                for k, i in annotation.items():
+                    fig.add_annotation(dict(xref="paper", yref="paper", x=i["x"], y=i["y"],
+                                            text=i["text"],
+                                            showarrow=False,
+                                            textangle=0))
+                    fig.update_layout(xaxis={'showticklabels': False})
+
+        fig.update_layout(
+            legend=dict(
+                xref="paper", yref="paper",
+                orientation="h",
+                entrywidth=160,
+                yanchor="bottom",
+                y=1.02,
+                xanchor="left",
+                x=0
+            ),
+            showlegend=self.data["show_legend"]
+        )
 
         return fig
 
@@ -74,29 +173,63 @@ class CreateGraphs:
         """
         x = self.aux_data["x"]
         y = self.aux_data["y"]
-
         high = self.aux_data["high"]
         low = self.aux_data["low"]
+        color = self.aux_data["color"]
 
-        fig = go.Figure(data=go.Scatter(x=self.aux_data["df"][x], y=self.aux_data["df"][y],
-                                        mode="markers",
-                                        error_x=dict(
-                                            type="data",
-                                            array=abs(self.aux_data["df"][high] - self.aux_data["df"][x]),
-                                            symmetric=False,
-                                            arrayminus=abs(self.aux_data["df"][low] - self.aux_data["df"][x])
-                                        ),
-                                        marker=dict(color=self.aux_data["color"],
-                                                    size=20)),
-                        layout_xaxis_range=[-1, 1], layout={
-                # "title": self.aux_data["title"],
-                                                            "paper_bgcolor": self.bg_color,
-                                                            "plot_bgcolor": self.bg_color})
+        fig = go.Figure(
+            layout_xaxis_range=[-1, 1],
+            layout={"paper_bgcolor": self.bg_color,
+                    "plot_bgcolor": self.bg_color}
+        )
 
-        for i in [-1.0, -0.5, 0.0, 0.5, 1.0]:
+        unique_colors = self.aux_data["df"][color].unique()
+
+        for c in unique_colors:
+            color_mask = self.aux_data["df"][color] == c
+
+            fig.add_trace(
+                go.Scatter(
+                    x=self.aux_data["df"][x][color_mask],
+                    y=self.aux_data["df"][y][color_mask],
+                    mode="markers",
+                    error_x=dict(
+                        type="data",
+                        array=abs(self.aux_data["df"][high][color_mask] - self.aux_data["df"][x][color_mask]),
+                        symmetric=False,
+                        arrayminus=abs(self.aux_data["df"][low][color_mask] - self.aux_data["df"][x][color_mask])
+                    ),
+                    marker=dict(
+                        color=self.color_palettes[color][c],
+                        size=20
+                    ),
+                    name=c
+                )
+            )
+
+        type_line = self.aux_data["line"]
+        for i in self.lines[type_line]["line"]:
             fig.add_vline(x=i, line_width=1, line_dash="dash", line_color="grey")
 
-        fig.update_layout(width=750, height=500)
+        annotation = self.lines[type_line]["annotation"]
+        for k, i in annotation.items():
+            fig.add_annotation(dict(xref="paper", yref="paper", x=i["x"], y=i["y"],
+                                    text=i["text"],
+                                    showarrow=False,
+                                    textangle=0))
+
+        fig.update_layout(width=750, height=500, showlegend=True,
+                          legend=dict(
+                              # xref="paper", yref="paper",
+                              orientation="h",
+                              entrywidth=175,
+                              yanchor="bottom",
+                              y=1.02,
+                              xanchor="left",
+                              x=0.6
+                          ),
+                          xaxis_title=self.aux_data["xaxis_name"],
+                          **kwargs)
 
         return fig
 
@@ -118,6 +251,12 @@ class CreateGraphs:
         for i in range(1, len(keys)):
             merged = pd.merge(merged, self.data["data"][keys[i]][cols_to_keep],
                               on=cols_to_keep[:2], how="outer", suffixes=(f"{keys[i-1]}", f"{keys[i]}"))
+
+        if self.legend_translations["Constructo"] is not None:
+            order = self.legend_translations["Constructo"]
+            merged["Constructo"] = pd.Categorical(merged["Constructo"], ordered=True, categories=order)
+            merged = merged.sort_values("Constructo", ascending=False)
+            merged = merged.replace({"Constructo": self.legend_translations["Constructo"]})
 
         encoded = pd.DataFrame({})
         for col in merged.columns:
@@ -150,18 +289,18 @@ class CreateGraphs:
         for col in merged.columns:
             annotations[col] = merged[col].apply(format_table)
 
+        colorscale = self.data["color_scale"]
         fig = go.Figure(data=go.Heatmap(z=encoded.iloc[:, 2:],
                                         x=self.data["xaxis_name"],
                                         y=[encoded["Constructo"], encoded["Medición inglés"]],
-                                        colorscale=self.data["color_scale"],
+                                        colorscale=self.color_scales[colorscale],
                                         text=annotations.iloc[:, 2:],
                                         texttemplate="%{text}",
                                         showscale=False),
-                        layout={"title": self.data["title"],
-                                "paper_bgcolor": self.bg_color,
+                        layout={"paper_bgcolor": self.bg_color,
                                 "plot_bgcolor": self.bg_color})
 
-        fig.update_layout(height=1200)
+        fig.update_layout(height=1200, xaxis=dict(side='top'))
 
         return fig
 
@@ -185,7 +324,11 @@ class CreateGraphs:
         if self.aux_data["disaggregate"] is not None:
 
             param = self.aux_data["disaggregate"]
-            disaggregate = self.aux_data["df"][param].unique()
+
+            if param in self.category_orders:
+                disaggregate = [x for x in self.category_orders[param] if x in self.aux_data["df"][param].unique()]
+            else:
+                disaggregate = self.aux_data["df"][param].unique()
 
             nrows = math.ceil(len(disaggregate) / 2)
             rows = {}
@@ -199,7 +342,8 @@ class CreateGraphs:
 
                 for j in range(ncols):
                     self.aux_data["df"] = self.data["df"][self.data["df"][param] == disaggregate[counter]]
-                    temp_fig = charts[type_graph]()
+
+                    temp_fig = charts[type_graph](title=self.legend_translations[param][disaggregate[counter]])
                     if len(rows[f"{i}"]) == 2:
                         tile = rows[f"{i}"][j].container(border=True)
                         tile.plotly_chart(temp_fig)

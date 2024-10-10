@@ -1,7 +1,5 @@
-import pandas as pd
-import plotly.express as px
 import streamlit as st
-from dashboard import CreateDashboard, set_header
+from dashboard import CreateDashboard
 from graphs import CreateGraphs
 from processing import ProcessData
 
@@ -22,17 +20,11 @@ class DashboardAlcance(CreateDashboard):
                     "x": "Email",
                     "y": "Entidad",
                     "orientation": "h",
-                    "order": {
-                        "Prioridad": ["Priority 1", "Priority 2", "Authorized Extension", "Other"]
-                    },
                     "color": "Prioridad",
-                    "color_palette": {
-                        "Priority 1": "#154360", "Priority 2": "#2471a3",
-                        "Authorized Extension": "#5dade2", "Other": "#d6eaf8"
-                    },
                     "title": "Number of direct beneficiaries per state",
                     "xaxis_name": "Number of beneficiaries",
                     "yaxis_name": "State",
+                    "show_legend": True,
                     "legend_name": "Municipality\nPriority",
                     "legend_elements": None
                 },
@@ -43,23 +35,15 @@ class DashboardAlcance(CreateDashboard):
                     "x": "Email",
                     "y": "Tipo",
                     "orientation": "h",
-                    "order": {
-                        "Prioridad": ["Priority 1", "Priority 2", "Authorized Extension", "Other"]
-                    },
                     "color": "Prioridad",
-                    "color_palette": {
-                        "Priority 1": "#154360", "Priority 2": "#2471a3",
-                        "Authorized Extension": "#5dade2", "Other": "#d6eaf8"
-                    },
                     "title": "Number of direct beneficiaries per program",
                     "xaxis_name": "Number of beneficiaries",
                     "yaxis_name": "Program",
+                    "show_legend": True,
                     "legend_name": "Municipality\nPriority",
                     "legend_elements": None
-                }
-            },
-            "Professional Development": {
-                "states": {
+                },
+                "professionals": {
                     "df": self.df[self.df["Implementación"].str.contains("Educadores")].groupby(["Entidad",
                                                                                                  "Prioridad"])
                     .aggregate({"Email": "nunique"})
@@ -67,23 +51,31 @@ class DashboardAlcance(CreateDashboard):
                     "x": "Email",
                     "y": "Entidad",
                     "orientation": "h",
-                    "order": {
-                        "Prioridad": ["Priority 1", "Priority 2", "Authorized Extension", "Other"]
-                    },
                     "color": "Prioridad",
-                    "color_palette": {
-                        "Priority 1": "#154360", "Priority 2": "#2471a3",
-                        "Authorized Extension": "#5dade2", "Other": "#d6eaf8"
-                    },
                     "title": "Number of benefited professionals per state",
                     "xaxis_name": "Benefited professionals",
                     "yaxis_name": "State",
+                    "show_legend": True,
                     "legend_name": "Municipality\nPriority",
                     "legend_elements": None
-                }
-            },
-            "PIBSE Teenagers": {
-                "states": {
+                },
+                "schools": {
+                    "df": self.df[(self.df["Centro de trabajo verificado"]) &
+                                  (self.df["Tipo_cct"] == "Escuela")].groupby(["Entidad", "Prioridad"])
+                    .aggregate({"Centro de trabajo": "nunique"})
+                    .reset_index(),
+                    "x": "Centro de trabajo",
+                    "y": "Entidad",
+                    "orientation": "h",
+                    "color": "Prioridad",
+                    "title": "Number of benefited verified schools per state",
+                    "xaxis_name": "Benefited verified schools",
+                    "yaxis_name": "State",
+                    "show_legend": True,
+                    "legend_name": "Municipality\nPriority",
+                    "legend_elements": None
+                },
+                "teenagers": {
                     "df": self.df[self.df["Implementación"].str.contains("Estudiantes")].groupby(["Entidad",
                                                                                                   "Prioridad"])
                     .aggregate({"Email": "nunique"})
@@ -91,17 +83,11 @@ class DashboardAlcance(CreateDashboard):
                     "x": "Email",
                     "y": "Entidad",
                     "orientation": "h",
-                    "order": {
-                        "Prioridad": ["Priority 1", "Priority 2", "Authorized Extension", "Other"]
-                    },
                     "color": "Prioridad",
-                    "color_palette": {
-                        "Priority 1": "#154360", "Priority 2": "#2471a3",
-                        "Authorized Extension": "#5dade2", "Other": "#d6eaf8"
-                    },
                     "title": "Number of direct benefited teenagers per state",
                     "xaxis_name": "Benefited teenagers",
                     "yaxis_name": "State",
+                    "show_legend": True,
                     "legend_name": "Municipality\nPriority",
                     "legend_elements": None
                 },
@@ -113,20 +99,65 @@ class DashboardAlcance(CreateDashboard):
                     "x": "Conteo",
                     "y": "Entidad",
                     "orientation": "h",
-                    "order": {
-                        "Ben_directo": ["25", "1"]
-                    },
                     "color": "Ben_directo",
-                    "color_palette": {
-                        "1": "#5dade2", "25": "#154360"
-                    },
                     "title": "Number of direct and indirect benefited teenagers per state",
                     "xaxis_name": "Benefited teenagers",
                     "yaxis_name": "State",
-                    "legend_name": "Benediciary Type",
+                    "show_legend": True,
+                    "legend_name": "Beneficiary Type",
                     "legend_elements": {"25": "Indirect", "1": "Direct"}
                 }
             },
+            # "Professional Development": {
+            #     "states": {
+            #         "df": self.df[self.df["Implementación"].str.contains("Educadores")].groupby(["Entidad",
+            #                                                                                      "Prioridad"])
+            #         .aggregate({"Email": "nunique"})
+            #         .reset_index(),
+            #         "x": "Email",
+            #         "y": "Entidad",
+            #         "orientation": "h",
+            #         "order": {
+            #             "Prioridad": ["Kellogg's Priority", "Authorized Extension", "Other"],
+            #             "Entidad": ["Campeche", "Quintana Roo", "Yucatán", "No data"]
+            #         },
+            #         "color": "Prioridad",
+            #         "color_palette": {
+            #             "Kellogg's Priority": "#22314E", "Authorized Extension": "#4A5E7A",
+            #             "Other": "#A7B4CD"
+            #         },
+            #         "title": "Number of benefited professionals per state",
+            #         "xaxis_name": "Benefited professionals",
+            #         "yaxis_name": "State",
+            #         "legend_name": "Municipality\nPriority",
+            #         "legend_elements": None
+            #     }
+            # },
+            # "PIBSE Teenagers": {
+            #     "states": {
+            #         "df": self.df[self.df["Implementación"].str.contains("Estudiantes")].groupby(["Entidad",
+            #                                                                                       "Prioridad"])
+            #         .aggregate({"Email": "nunique"})
+            #         .reset_index(),
+            #         "x": "Email",
+            #         "y": "Entidad",
+            #         "orientation": "h",
+            #         "order": {
+            #             "Prioridad": ["Kellogg's Priority", "Authorized Extension", "Other"],
+            #             "Entidad": ["Campeche", "Quintana Roo", "Yucatán", "No data"]
+            #         },
+            #         "color": "Prioridad",
+            #         "color_palette": {
+            #             "Kellogg's Priority": "#22314E", "Authorized Extension": "#4A5E7A",
+            #             "Other": "#A7B4CD"
+            #         },
+            #         "title": "Number of direct benefited teenagers per state",
+            #         "xaxis_name": "Benefited teenagers",
+            #         "yaxis_name": "State",
+            #         "legend_name": "Municipality\nPriority",
+            #         "legend_elements": None
+            #     }
+            # },
             "Reached Municipalities": {
                 "states": {
                     "df": self.df.groupby(["Entidad", "Prioridad"])
@@ -135,45 +166,40 @@ class DashboardAlcance(CreateDashboard):
                     "x": "Municipio",
                     "y": "Entidad",
                     "orientation": "h",
-                    "order": {
-                        "Prioridad": ["Priority 1", "Priority 2", "Authorized Extension", "Other"]
-                    },
                     "color": "Prioridad",
-                    "color_palette": {
-                        "Priority 1": "#154360", "Priority 2": "#2471a3",
-                        "Authorized Extension": "#5dade2", "Other": "#d6eaf8"
-                    },
                     "title": "Number of benefited municipalities per state",
                     "xaxis_name": "Benefited municipalities",
                     "yaxis_name": "State",
-                    "legend_name": "Municipality\nPriority",
-                    "legend_elements": None
-                }
-            },
-            "Benefited Schools": {
-                "states": {
-                    "df": self.df[(self.df["Centro de trabajo verificado"]) &
-                                  (self.df["Tipo_cct"] == "Escuela")].groupby(["Entidad", "Prioridad"])
-                    .aggregate({"Centro de trabajo": "nunique"})
-                    .reset_index(),
-                    "x": "Centro de trabajo",
-                    "y": "Entidad",
-                    "orientation": "h",
-                    "order": {
-                        "Prioridad": ["Priority 1", "Priority 2", "Authorized Extension", "Other"]
-                    },
-                    "color": "Prioridad",
-                    "color_palette": {
-                        "Priority 1": "#154360", "Priority 2": "#2471a3",
-                        "Authorized Extension": "#5dade2", "Other": "#d6eaf8"
-                    },
-                    "title": "Number of benefited verified schools per state",
-                    "xaxis_name": "Benefited verified schools",
-                    "yaxis_name": "State",
+                    "show_legend": True,
                     "legend_name": "Municipality\nPriority",
                     "legend_elements": None
                 }
             }
+            # "Benefited Schools": {
+            #     "states": {
+            #         "df": self.df[(self.df["Centro de trabajo verificado"]) &
+            #                       (self.df["Tipo_cct"] == "Escuela")].groupby(["Entidad", "Prioridad"])
+            #         .aggregate({"Centro de trabajo": "nunique"})
+            #         .reset_index(),
+            #         "x": "Centro de trabajo",
+            #         "y": "Entidad",
+            #         "orientation": "h",
+            #         "order": {
+            #             "Prioridad": ["Kellogg's Priority", "Authorized Extension", "Other"],
+            #             "Entidad": ["Campeche", "Quintana Roo", "Yucatán", "No data"]
+            #         },
+            #         "color": "Prioridad",
+            #         "color_palette": {
+            #             "Kellogg's Priority": "#22314E", "Authorized Extension": "#4A5E7A",
+            #             "Other": "#A7B4CD"
+            #         },
+            #         "title": "Number of benefited verified schools per state",
+            #         "xaxis_name": "Benefited verified schools",
+            #         "yaxis_name": "State",
+            #         "legend_name": "Municipality\nPriority",
+            #         "legend_elements": None
+            #     }
+            # }
         }
 
     def set_sidebar(self):
@@ -196,14 +222,14 @@ class DashboardAlcance(CreateDashboard):
         """
 
         # st.write(data)
-        set_header("Beneficiaries")
+        self.set_header("Beneficiaries")
 
         self.set_sidebar()
 
         for k in self.graph_options[self.option]:
             st.write("")
             data = self.graph_options[self.option][k]
-            set_header(data["title"], type="subtitle")
+            self.set_header(data["title"], type_header="subtitle")
             st.plotly_chart(CreateGraphs(data).create_barchart())
 
 
