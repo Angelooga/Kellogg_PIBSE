@@ -1,6 +1,5 @@
 import streamlit as st
-import plotly.express as px
-from dashboard import CreateDashboard, set_header
+from dashboard import CreateDashboard
 from graphs import CreateGraphs
 from processing import ProcessData
 
@@ -12,7 +11,6 @@ class DashboardOutcomes(CreateDashboard):
 
     def __init__(self, df):
         super().__init__(df)
-        self.option = "Outcome Graphs (Horizontal)"
         self.graph_options = {
             "Outcome Graphs (Vertical)": {
                 "Professionals": {
@@ -21,28 +19,15 @@ class DashboardOutcomes(CreateDashboard):
                     "y": "D-cohen",
                     "type_graph": "barchart",
                     "orientation": "v",
-                    "order": None,
                     "color": "Constructo",
-                    "color_palette": {
-                        "Autoconocimiento": "#22314E", "Regulación emocional": "#1A7F83",
-                        "Malestar psicológico": "#F15D4A", "Prosocialidad": "#F0BA54",
-                        "Bienestar psicológico": "#4F6AA8",
-                        "Aprendizaje socioemocional en la comunidad educativa": "#F59794"
-                    },
                     "title": "Outcomes Graph: Professionals Groups 1 & 2",
                     "text": "Significancia",
                     "text_dtype": "str",
                     "xaxis_name": "Scale",
                     "yaxis_name": "D-Cohen",
-                    "legend_name": "Construct",
-                    "legend_elements": {
-                        "Autoconocimiento": "Self-knowledge",
-                        "Bienestar psicológico": "Well-being",
-                        "Malestar psicológico": "Discomfort",
-                        "Prosocialidad": "Prosociality",
-                        "Regulación emocional": "Emotional Regulation",
-                        "Aprendizaje socioemocional en la comunidad educativa": "Social Emotional Learning"
-                    }
+                    "show_legend": True,
+                    "legend_name": None,
+                    "legend_translation": "Constructo"
                 },
                 "Professionals_FLS": {
                     "df": self.df["fls"],
@@ -52,18 +37,14 @@ class DashboardOutcomes(CreateDashboard):
                     "orientation": "v",
                     "order": None,
                     "color": "Constructo",
-                    "color_palette": {
-                        "Aprendizaje socioemocional en la comunidad educativa": "#F59794"
-                    },
                     "title": "Outcomes Graph: Systematic Leadership Training",
                     "text": "Significancia",
                     "text_dtype": "str",
                     "xaxis_name": "Scale",
                     "yaxis_name": "D-Cohen",
-                    "legend_name": "Construct",
-                    "legend_elements": {
-                        "Aprendizaje socioemocional en la comunidad educativa": "Social Emotional Learning"
-                    }
+                    "show_legend": True,
+                    "legend_name": None,
+                    "legend_translation": "Constructo"
                 },
                 "Teenagers_g1": {
                     "df": self.df["estudiantes_g1"],
@@ -71,26 +52,15 @@ class DashboardOutcomes(CreateDashboard):
                     "y": "D-cohen",
                     "type_graph": "barchart",
                     "orientation": "v",
-                    "order": None,
                     "color": "Constructo",
-                    "color_palette": {
-                        "Autoconocimiento": "#22314E", "Regulación emocional": "#1A7F83",
-                        "Malestar psicológico": "#F15D4A", "Prosocialidad": "#F0BA54",
-                        "Bienestar psicológico": "#4F6AA8"
-                    },
                     "title": "Outcomes Graph: Teenagers Groups 1 & 2",
                     "text": "Significancia",
                     "text_dtype": "str",
                     "xaxis_name": "Scale",
                     "yaxis_name": "D-Cohen",
-                    "legend_name": "Construct",
-                    "legend_elements": {
-                        "Autoconocimiento": "Self-knowledge",
-                        "Bienestar psicológico": "Well-being",
-                        "Malestar psicológico": "Discomfort",
-                        "Prosocialidad": "Prosociality",
-                        "Regulación emocional": "Emotional Regulation"
-                    }
+                    "show_legend": True,
+                    "legend_name": None,
+                    "legend_translation": "Constructo"
                 },
                 "Teenagers_g2": {
                     "df": self.df["estudiantes_g2"].query("Subanálisis == 'Todos-as 1+ CA' "
@@ -99,30 +69,15 @@ class DashboardOutcomes(CreateDashboard):
                     "y": "D-cohen",
                     "type_graph": "barchart",
                     "orientation": "v",
-                    "order": None,
                     "color": "Constructo",
-                    "color_palette": {
-                        "Autoconocimiento": "#22314E", "Regulación emocional": "#1A7F83",
-                        "Malestar psicológico": "#F15D4A", "Prosocialidad": "#F0BA54",
-                        "Bienestar psicológico": "#4F6AA8",
-                        "Creencias sobre el Aprendizaje Socioemocional": "#F59794",
-                        "Seguridad y pertenencia": "#D094EA"
-                    },
                     "title": "Outcomes Graph: Teenagers Groups 3, 4 & 5",
                     "text": "Significancia",
                     "text_dtype": "str",
                     "xaxis_name": "Scale",
                     "yaxis_name": "D-Cohen",
-                    "legend_name": "Construct",
-                    "legend_elements": {
-                        "Autoconocimiento": "Self-knowledge",
-                        "Bienestar psicológico": "Well-being",
-                        "Malestar psicológico": "Discomfort",
-                        "Prosocialidad": "Prosociality",
-                        "Regulación emocional": "Emotional Regulation",
-                        "Seguridad y pertenencia": "Belonging",
-                        "Creencias sobre el Aprendizaje Socioemocional": "Social Emotional Learning"
-                    }
+                    "show_legend": True,
+                    "legend_name": None,
+                    "legend_translation": "Constructo"
                 }
             },
             "Outcome Graphs (Horizontal)": {
@@ -133,34 +88,15 @@ class DashboardOutcomes(CreateDashboard):
                     "y": "Medición inglés",
                     "type_graph": "barchart",
                     "orientation": "h",
-                    "order": None,
                     "color": "Constructo",
-                    "color_palette": {
-                        "Autoconocimiento": "#22314E", "Regulación emocional": "#1A7F83",
-                        "Malestar psicológico": "#F15D4A", "Prosocialidad": "#F0BA54",
-                        "Bienestar psicológico": "#4F6AA8",
-                        "Aprendizaje socioemocional en la comunidad educativa": "#F59794"
-                    },
                     "title": "Outcomes Graph: Professionals Groups 1 & 2",
                     "text": "D-cohen",
                     "text_dtype": "float",
                     "yaxis_name": "Scale",
                     "xaxis_name": "D-Cohen/Effect Size",
-                    "legend_name": "Construct",
-                    "legend_elements": {
-                        "Autoconocimiento": "Self-knowledge",
-                        "Bienestar psicológico": "Well-being",
-                        "Malestar psicológico": "Discomfort",
-                        "Prosocialidad": "Prosociality",
-                        "Regulación emocional": "Emotional Regulation",
-                        "Aprendizaje socioemocional en la comunidad educativa": "Social Emotional Learning"
-                    },
-                    "line": {
-                        "S": 0.2,
-                        "M": 0.5,
-                        "B": 0.8
-                    },
-                    "annotation": "S: Small, M: Medium, B: Big"
+                    "legend_name": None,
+                    "line": "Effect_Size",
+                    "show_legend": False
                 },
                 "Professionals_FLS": {
                     "df": self.df["fls"],
@@ -171,24 +107,14 @@ class DashboardOutcomes(CreateDashboard):
                     "orientation": "h",
                     "order": None,
                     "color": "Constructo",
-                    "color_palette": {
-                        "Aprendizaje socioemocional en la comunidad educativa": "#F59794"
-                    },
                     "title": "Outcomes Graph: Systematic Leadership Training",
                     "text": "D-cohen",
                     "text_dtype": "float",
                     "yaxis_name": "Scale",
                     "xaxis_name": "D-Cohen/Effect Size",
-                    "legend_name": "Construct",
-                    "legend_elements": {
-                        "Aprendizaje socioemocional en la comunidad educativa": "Social Emotional Learning"
-                    },
-                    "line": {
-                        "S": 0.2,
-                        "M": 0.5,
-                        "B": 0.8
-                    },
-                    "annotation": "S: Small, M: Medium, B: Big"
+                    "legend_name": None,
+                    "line": "Effect_Size",
+                    "show_legend": False
                 },
                 "Teenagers_g1": {
                     "df": self.df["estudiantes_g1"],
@@ -197,30 +123,15 @@ class DashboardOutcomes(CreateDashboard):
                     "y": "Medición inglés",
                     "type_graph": "barchart",
                     "orientation": "h",
-                    "order": None,
                     "color": "Constructo",
-                    "color_palette": {
-                        "Autoconocimiento": "#22314E", "Regulación emocional": "#1A7F83",
-                        "Malestar psicológico": "#F15D4A", "Prosocialidad": "#F0BA54",
-                        "Bienestar psicológico": "#4F6AA8"
-                    },
                     "title": "Outcomes Graph: Teenagers Groups 1 & 2",
                     "text": "D-cohen",
                     "text_dtype": "float",
                     "yaxis_name": "Scale",
                     "xaxis_name": "D-Cohen/Effect Size",
-                    "legend_name": "Construct",
-                    "legend_elements": {
-                        "Autoconocimiento": "Self-knowledge",
-                        "Bienestar psicológico": "Well-being",
-                        "Malestar psicológico": "Discomfort",
-                        "Prosocialidad": "Prosociality",
-                        "Regulación emocional": "Emotional Regulation"
-                    },
-                    "line": {
-                        "S": 0.2
-                    },
-                    "annotation": "S: Small, M: Medium, B: Big"
+                    "legend_name": None,
+                    "line": "Effect_Size",
+                    "show_legend": False
                 },
                 "Teenagers_g2": {
                     "df": self.df["estudiantes_g2"].query("Subanálisis == 'Todos-as 1+ CA' "
@@ -230,34 +141,15 @@ class DashboardOutcomes(CreateDashboard):
                     "y": "Medición inglés",
                     "type_graph": "barchart",
                     "orientation": "h",
-                    "order": None,
                     "color": "Constructo",
-                    "color_palette": {
-                        "Autoconocimiento": "#22314E", "Regulación emocional": "#1A7F83",
-                        "Malestar psicológico": "#F15D4A", "Prosocialidad": "#F0BA54",
-                        "Bienestar psicológico": "#4F6AA8",
-                        "Creencias sobre el Aprendizaje Socioemocional": "#F59794",
-                        "Seguridad y pertenencia": "#D094EA"
-                    },
                     "title": "Outcomes Graph: Teenagers Groups 3, 4 & 5",
                     "text": "D-cohen",
                     "text_dtype": "float",
                     "yaxis_name": "Scale",
                     "xaxis_name": "D-Cohen/Effect Size",
-                    "legend_name": "Construct",
-                    "legend_elements": {
-                        "Autoconocimiento": "Self-knowledge",
-                        "Bienestar psicológico": "Well-being",
-                        "Malestar psicológico": "Discomfort",
-                        "Prosocialidad": "Prosociality",
-                        "Regulación emocional": "Emotional Regulation",
-                        "Seguridad y pertenencia": "Belonging",
-                        "Creencias sobre el Aprendizaje Socioemocional": "Social Emotional Learning"
-                    },
-                    "line": {
-                        "S": 0.2
-                    },
-                    "annotation": "S: Small, M: Medium, B: Big"
+                    "legend_name": None,
+                    "line": "Effect_Size",
+                    "show_legend": False
                 }
             },
             "Detailed Outcome Graphs": {
@@ -270,25 +162,12 @@ class DashboardOutcomes(CreateDashboard):
                     "high": "conf.high",
                     "low": "conf.low",
                     "orientation": None,
-                    "order": None,
-                    "color": self.df["educadores"]["Comportamiento"]
-                    .apply(lambda x: "#415E99" if x == "Significativo/sentido esperado"
-                           else "#F49184" if x == "Significativo/sentido contrario"
-                           else "#D1DAEB" if x == "No significativo/sentido esperado"
-                           else "#F9C6BF"),
-                    "color_palette": None,
+                    "color": "Comportamiento",
                     "title": "Detailed Outcomes Graph: Professionals Groups 1 & 2",
-                    "xaxis_name": "Scale",
-                    "yaxis_name": "D-Cohen",
+                    "xaxis_name": "D-Cohen",
+                    "yaxis_name": "Scale",
                     "legend_name": "Construct",
-                    "legend_elements": {
-                        "Autoconocimiento": "Self-knowledge",
-                        "Bienestar psicológico": "Well-being",
-                        "Malestar psicológico": "Discomfort",
-                        "Prosocialidad": "Prosociality",
-                        "Regulación emocional": "Emotional Regulation",
-                        "Aprendizaje socioemocional en la comunidad educativa": "Social Emotional Learning"
-                    }
+                    "line": "D-Cohen"
                 },
                 "Professionals_FLS": {
                     "df": self.df["fls"],
@@ -299,20 +178,12 @@ class DashboardOutcomes(CreateDashboard):
                     "high": "conf.high",
                     "low": "conf.low",
                     "orientation": None,
-                    "order": None,
-                    "color": self.df["fls"]["Comportamiento"]
-                    .apply(lambda x: "#415E99" if x == "Significativo/sentido esperado"
-                           else "#F49184" if x == "Significativo/sentido contrario"
-                           else "#D1DAEB" if x == "No significativo/sentido esperado"
-                           else "#F9C6BF"),
-                    "color_palette": None,
+                    "color": "Comportamiento",
                     "title": "Outcomes Graph: Systematic Leadership Training",
-                    "xaxis_name": "Scale",
-                    "yaxis_name": "D-Cohen",
+                    "xaxis_name": "D-Cohen",
+                    "yaxis_name": "Scale",
                     "legend_name": "Construct",
-                    "legend_elements": {
-                        "Aprendizaje socioemocional en la comunidad educativa": "Social Emotional Learning"
-                    }
+                    "line": "D-Cohen"
                 },
                 "Teenagers_g1": {
                     "df": self.df["estudiantes_g1"],
@@ -323,24 +194,12 @@ class DashboardOutcomes(CreateDashboard):
                     "high": "conf.high",
                     "low": "conf.low",
                     "orientation": None,
-                    "order": None,
-                    "color": self.df["estudiantes_g1"]["Comportamiento"]
-                    .apply(lambda x: "#415E99" if x == "Significativo/sentido esperado"
-                           else "#F49184" if x == "Significativo/sentido contrario"
-                           else "#D1DAEB" if x == "No significativo/sentido esperado"
-                           else "#F9C6BF"),
-                    "color_palette": None,
+                    "color": "Comportamiento",
                     "title": "Outcomes Graph: Teenagers Groups 1 & 2",
-                    "xaxis_name": "Scale",
-                    "yaxis_name": "D-Cohen",
+                    "xaxis_name": "D-Cohen",
+                    "yaxis_name": "Scale",
                     "legend_name": "Construct",
-                    "legend_elements": {
-                        "Autoconocimiento": "Self-knowledge",
-                        "Bienestar psicológico": "Well-being",
-                        "Malestar psicológico": "Discomfort",
-                        "Prosocialidad": "Prosociality",
-                        "Regulación emocional": "Emotional Regulation"
-                    }
+                    "line": "D-Cohen"
                 },
                 "Teenagers_g2": {
                     "df": self.df["estudiantes_g2"].query("Subanálisis == 'Todos-as 1+ CA' "
@@ -352,27 +211,12 @@ class DashboardOutcomes(CreateDashboard):
                     "high": "conf.high",
                     "low": "conf.low",
                     "orientation": None,
-                    "order": None,
-                    "color": self.df["estudiantes_g2"].query("Subanálisis == 'Todos-as 1+ CA' "
-                                                             "& Pre == 'inicial' & Post == 'final'")["Comportamiento"]
-                    .apply(lambda x: "#415E99" if x == "Significativo/sentido esperado"
-                           else "#F49184" if x == "Significativo/sentido contrario"
-                           else "#D1DAEB" if x == "No significativo/sentido esperado"
-                           else "#F9C6BF"),
-                    "color_palette": None,
+                    "color": "Comportamiento",
                     "title": "Outcomes Graph: Teenagers Groups 3, 4 & 5",
-                    "xaxis_name": "Scale",
-                    "yaxis_name": "D-Cohen",
+                    "xaxis_name": "D-Cohen",
+                    "yaxis_name": "Scale",
                     "legend_name": "Construct",
-                    "legend_elements": {
-                        "Autoconocimiento": "Self-knowledge",
-                        "Bienestar psicológico": "Well-being",
-                        "Malestar psicológico": "Discomfort",
-                        "Prosocialidad": "Prosociality",
-                        "Regulación emocional": "Emotional Regulation",
-                        "Seguridad y pertenencia": "Belonging",
-                        "Creencias sobre el Aprendizaje Socioemocional": "Social Emotional Learning"
-                    }
+                    "line": "D-Cohen"
                 }
             },
             "Outcome Summary Table": {
@@ -385,15 +229,14 @@ class DashboardOutcomes(CreateDashboard):
                                                                "& Pre == 'inicial' & Post == 'final'")
                     },
                     "type_graph": "summary_table",
-                    "color_scale": [[0, "#F9C6BF"], [0.25, "#F49184"],
-                                    [0.5, "#D1DAEB"], [1, "#415E99"]],
+                    "color_scale": "Comportamiento",
                     "title": "Outcome Summary Table",
                     "xaxis_name": ["Professionals: Groups 1 & 2", "Systemic Leadership Training",
-                                   "Teenagers: Groups 1, 2 & 3", "Teenagers: Groups 4 & 5"],
-                    "yaxis_name": None
+                                   "Teenagers: Groups 1, 2 & 3", "Teenagers: Groups 4 & 5"]
                 }
             }
         }
+        self.option = "Outcome Graphs (Horizontal)"
 
     def set_sidebar(self):
         """
@@ -409,14 +252,14 @@ class DashboardOutcomes(CreateDashboard):
         This function does something...
         :return:
         """
-        set_header("Outcomes")
+        self.set_header("Outcomes")
 
         self.set_sidebar()
 
         for k in self.graph_options[self.option]:
             data = self.graph_options[self.option][k]
             st.write(" ")
-            set_header(data["title"], type="subtitle")
+            self.set_header(data["title"], type_header="subtitle")
             CreateGraphs(data).set_plots_grid(type_graph=data["type_graph"])
 
 
