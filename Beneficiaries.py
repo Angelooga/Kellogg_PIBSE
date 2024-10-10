@@ -105,7 +105,7 @@ class DashboardAlcance(CreateDashboard):
                     "yaxis_name": "State",
                     "show_legend": True,
                     "legend_name": "Beneficiary Type",
-                    "legend_elements": {"25": "Indirect", "1": "Direct"}
+                    "legend_translation": "Ben_directo"
                 }
             },
             # "Professional Development": {
