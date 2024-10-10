@@ -108,56 +108,6 @@ class DashboardAlcance(CreateDashboard):
                     "legend_translation": "Ben_directo"
                 }
             },
-            # "Professional Development": {
-            #     "states": {
-            #         "df": self.df[self.df["Implementación"].str.contains("Educadores")].groupby(["Entidad",
-            #                                                                                      "Prioridad"])
-            #         .aggregate({"Email": "nunique"})
-            #         .reset_index(),
-            #         "x": "Email",
-            #         "y": "Entidad",
-            #         "orientation": "h",
-            #         "order": {
-            #             "Prioridad": ["Kellogg's Priority", "Authorized Extension", "Other"],
-            #             "Entidad": ["Campeche", "Quintana Roo", "Yucatán", "No data"]
-            #         },
-            #         "color": "Prioridad",
-            #         "color_palette": {
-            #             "Kellogg's Priority": "#22314E", "Authorized Extension": "#4A5E7A",
-            #             "Other": "#A7B4CD"
-            #         },
-            #         "title": "Number of benefited professionals per state",
-            #         "xaxis_name": "Benefited professionals",
-            #         "yaxis_name": "State",
-            #         "legend_name": "Municipality\nPriority",
-            #         "legend_elements": None
-            #     }
-            # },
-            # "PIBSE Teenagers": {
-            #     "states": {
-            #         "df": self.df[self.df["Implementación"].str.contains("Estudiantes")].groupby(["Entidad",
-            #                                                                                       "Prioridad"])
-            #         .aggregate({"Email": "nunique"})
-            #         .reset_index(),
-            #         "x": "Email",
-            #         "y": "Entidad",
-            #         "orientation": "h",
-            #         "order": {
-            #             "Prioridad": ["Kellogg's Priority", "Authorized Extension", "Other"],
-            #             "Entidad": ["Campeche", "Quintana Roo", "Yucatán", "No data"]
-            #         },
-            #         "color": "Prioridad",
-            #         "color_palette": {
-            #             "Kellogg's Priority": "#22314E", "Authorized Extension": "#4A5E7A",
-            #             "Other": "#A7B4CD"
-            #         },
-            #         "title": "Number of direct benefited teenagers per state",
-            #         "xaxis_name": "Benefited teenagers",
-            #         "yaxis_name": "State",
-            #         "legend_name": "Municipality\nPriority",
-            #         "legend_elements": None
-            #     }
-            # },
             "Reached Municipalities": {
                 "states": {
                     "df": self.df.groupby(["Entidad", "Prioridad"])
@@ -175,31 +125,6 @@ class DashboardAlcance(CreateDashboard):
                     "legend_elements": None
                 }
             }
-            # "Benefited Schools": {
-            #     "states": {
-            #         "df": self.df[(self.df["Centro de trabajo verificado"]) &
-            #                       (self.df["Tipo_cct"] == "Escuela")].groupby(["Entidad", "Prioridad"])
-            #         .aggregate({"Centro de trabajo": "nunique"})
-            #         .reset_index(),
-            #         "x": "Centro de trabajo",
-            #         "y": "Entidad",
-            #         "orientation": "h",
-            #         "order": {
-            #             "Prioridad": ["Kellogg's Priority", "Authorized Extension", "Other"],
-            #             "Entidad": ["Campeche", "Quintana Roo", "Yucatán", "No data"]
-            #         },
-            #         "color": "Prioridad",
-            #         "color_palette": {
-            #             "Kellogg's Priority": "#22314E", "Authorized Extension": "#4A5E7A",
-            #             "Other": "#A7B4CD"
-            #         },
-            #         "title": "Number of benefited verified schools per state",
-            #         "xaxis_name": "Benefited verified schools",
-            #         "yaxis_name": "State",
-            #         "legend_name": "Municipality\nPriority",
-            #         "legend_elements": None
-            #     }
-            # }
         }
 
     def set_sidebar(self):
