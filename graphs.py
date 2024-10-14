@@ -45,7 +45,8 @@ class CreateGraphs:
             "Prioridad": {
                 "Kellogg's Priority": "#22314E",
                 "Authorized Extension": "#4A5E7A",
-                "Other": "#A7B4CD"
+                "Other": "#A7B4CD",
+                "Not Reached":  "#FFFFFF"
             },
             "Ben_directo": {
                 "25": "#A7B4CD",
@@ -98,8 +99,6 @@ class CreateGraphs:
                 }
             }
         }
-        self.apply_colors = {}
-        self.show_legend = {}
 
     def create_barchart(self, **kwargs):
         """
@@ -304,6 +303,45 @@ class CreateGraphs:
 
         return fig
 
+    def reached_municipalities_legend(self):
+        """
+        This function does something...
+        :return:
+        """
+        import plotly.graph_objects as go
+
+        # Create a figure
+        fig = go.Figure()
+
+        if self.data["df"].empty:
+            text = "<b>All priority municipalities were reached.</b>"
+        else:
+            not_reached = self.data["df"]["Not Reached"].unique()
+            text = "<b>Priority municipalities not reached:</b><br>"
+            muns = ""
+            for m in not_reached:
+                muns = muns + f"{m}, "
+            text = (text + muns)[:-2]
+
+        # Add text with HTML formatting
+        fig.add_annotation(
+            text=text,
+            xref="paper", yref="paper",  # Reference to paper coordinates
+            x=0.5, y=0.5,  # Centering the text
+            showarrow=False,  # No arrow
+            font=dict(size=45)  # Font size
+        )
+
+        # Adjust layout (e.g., remove axis)
+        fig.update_layout(
+            xaxis=dict(showgrid=False, zeroline=False, visible=False),
+            yaxis=dict(showgrid=False, zeroline=False, visible=False),
+            width=1200,
+            height=200
+        )
+
+        # Show the figure
+        return fig
     def set_plots_grid(self, type_graph: str = "barchart",
                        ncols: int = 2, last: list = None, idx: int = 1):
         """
@@ -316,7 +354,8 @@ class CreateGraphs:
         charts = {
             "barchart": self.create_barchart,
             "forest": self.create_forest_plot,
-            "summary_table": self.create_summary_table
+            "summary_table": self.create_summary_table,
+            "reached_municipalities_legend": self.reached_municipalities_legend
         }
 
         counter = 0

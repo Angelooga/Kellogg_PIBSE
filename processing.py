@@ -1,7 +1,5 @@
 import streamlit as st
-# from streamlit_gsheets import GSheetsConnection
 from pydrive.auth import GoogleAuth
-# from pydrive.drive import GoogleDrive
 from google.oauth2 import service_account
 from google.auth.transport.requests import Request
 from io import BytesIO
@@ -45,6 +43,18 @@ class ProcessData:
                 "sheetname": "Sheet1",
                 "type": "excel",
                 "engine": "openpyxl"
+            },
+            "municipios": {
+                "key": "1IFhfq6a5IcE1ZCLs4afmm5nAjrU8TgHH",
+                "sheetname": "Sheet1",
+                "type": "excel",
+                "engine": "openpyxl"
+            },
+            "municipios_alcanzados": {
+                "key": "1kINeWvQv5yrr62zNKgoXATqJwmosGTVd",
+                "sheetname": "Sheet1",
+                "type": "excel",
+                "engine": "openpyxl"
             }
         }
         self.data = {}
@@ -57,8 +67,6 @@ class ProcessData:
         application is launched.
         """
         # Authenticating with a valid Google account
-        # st.write(st.secrets["connections"])
-
         gauth = GoogleAuth()
 
         credentials = service_account.Credentials.from_service_account_info(
@@ -79,20 +87,6 @@ class ProcessData:
                 url = f"https://www.googleapis.com/drive/v3/files/{key}?alt=media"
 
             rqst = requests.get(url, headers={"Authorization": f"Bearer {credentials.token}"})
-            # if rqst.status_code != 200:
-            #     st.error(f"Error fetching file {key}: {rqst.status_code} - {rqst.text}")
-            #     continue
-            #
-            #     # Debugging the content type
-            # content_type = rqst.headers.get('Content-Type')
-            # st.write(f"Content-Type: {content_type}")
-            #
-            # if i["type"] == "gsheets" or content_type == ("application/"
-            #                                               "vnd.openxmlformats-officedocument.spreadsheetml.sheet"):
-            #     # Handle Excel files (either from Google Sheets or Drive)
-            #     _self.data[k] = pd.read_excel(BytesIO(rqst.content), sheet_name=i["sheetname"], engine=engine)
-            # else:
-            #     st.error(f"Unexpected content type for file {key}: {content_type}")
             _self.data[k] = pd.read_excel(BytesIO(rqst.content), sheet_name=i["sheetname"], engine=engine)
 
         return _self.data

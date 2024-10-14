@@ -14,11 +14,12 @@ class DashboardAlcance(CreateDashboard):
         self.graph_options = {
             "Direct Beneficiaries": {
                 "states": {
-                    "df": self.df.groupby(["Entidad", "Prioridad"]).aggregate({
+                    "df": self.df["alcance"].groupby(["Entidad", "Prioridad"]).aggregate({
                         "Email": "nunique"
                     }).reset_index(),
                     "x": "Email",
                     "y": "Entidad",
+                    "type_graph": "barchart",
                     "orientation": "h",
                     "color": "Prioridad",
                     "title": "Number of direct beneficiaries per state",
@@ -26,46 +27,51 @@ class DashboardAlcance(CreateDashboard):
                     "yaxis_name": "State",
                     "show_legend": True,
                     "legend_name": "Municipality\nPriority",
-                    "legend_elements": None
+                    "legend_translation": None
                 },
                 "program": {
-                    "df": self.df.groupby(["Tipo", "Prioridad"]).aggregate({
+                    "df": self.df["alcance"].groupby(["Tipo", "Prioridad"]).aggregate({
                         "Email": "nunique"
                     }).reset_index(),
                     "x": "Email",
                     "y": "Tipo",
+                    "type_graph": "barchart",
                     "orientation": "h",
                     "color": "Prioridad",
                     "title": "Number of direct beneficiaries per program component",
                     "xaxis_name": "Number of beneficiaries",
-                    "yaxis_name": "Program",
+                    "yaxis_name": "Program component",
                     "show_legend": True,
-                    "legend_name": "Municipality\nPriority",
-                    "legend_elements": None
+                    "legend_name": "Municipality Priority",
+                    "legend_translation": None
                 },
                 "professionals": {
-                    "df": self.df[self.df["Implementación"].str.contains("Educadores")].groupby(["Entidad",
-                                                                                                 "Prioridad"])
+                    "df": self.df["alcance"][self.df["alcance"]["Implementación"].str.contains("Educadores")]
+                    .groupby(["Entidad",
+                              "Prioridad"])
                     .aggregate({"Email": "nunique"})
                     .reset_index(),
                     "x": "Email",
                     "y": "Entidad",
+                    "type_graph": "barchart",
                     "orientation": "h",
                     "color": "Prioridad",
                     "title": "Number of benefited educators per state",
                     "xaxis_name": "Benefited educators",
                     "yaxis_name": "State",
                     "show_legend": True,
-                    "legend_name": "Municipality\nPriority",
-                    "legend_elements": None
+                    "legend_name": "Municipality Priority",
+                    "legend_translation": None
                 },
                 "schools": {
-                    "df": self.df[(self.df["Centro de trabajo verificado"]) &
-                                  (self.df["Tipo_cct"] == "Escuela")].groupby(["Entidad", "Prioridad"])
+                    "df": self.df["alcance"][(self.df["alcance"]["Centro de trabajo verificado"]) &
+                                             (self.df["alcance"]["Tipo_cct"] == "Escuela")].groupby(["Entidad",
+                                                                                                     "Prioridad"])
                     .aggregate({"Centro de trabajo": "nunique"})
                     .reset_index(),
                     "x": "Centro de trabajo",
                     "y": "Entidad",
+                    "type_graph": "barchart",
                     "orientation": "h",
                     "color": "Prioridad",
                     "title": "Number of verified schools per state",
@@ -73,15 +79,17 @@ class DashboardAlcance(CreateDashboard):
                     "yaxis_name": "State",
                     "show_legend": True,
                     "legend_name": "Municipality\nPriority",
-                    "legend_elements": None
+                    "legend_translation": None
                 },
                 "teenagers": {
-                    "df": self.df[self.df["Implementación"].str.contains("Estudiantes")].groupby(["Entidad",
-                                                                                                  "Prioridad"])
+                    "df": self.df["alcance"][self.df["alcance"]["Implementación"].str.contains("Estudiantes")]
+                    .groupby(["Entidad",
+                               "Prioridad"])
                     .aggregate({"Email": "nunique"})
                     .reset_index(),
                     "x": "Email",
                     "y": "Entidad",
+                    "type_graph": "barchart",
                     "orientation": "h",
                     "color": "Prioridad",
                     "title": "Number of directly benefited teenager students per state",
@@ -89,15 +97,17 @@ class DashboardAlcance(CreateDashboard):
                     "yaxis_name": "State",
                     "show_legend": True,
                     "legend_name": "Municipality\nPriority",
-                    "legend_elements": None
+                    "legend_translation": None
                 },
                 "indirect": {
-                    "df": self.df[self.df["Implementación"].str.contains("Estudiantes")].groupby(["Entidad",
-                                                                                                  "Ben_directo"])
+                    "df": self.df["alcance"][self.df["alcance"]["Implementación"].str.contains("Estudiantes")]
+                    .groupby(["Entidad",
+                              "Ben_directo"])
                     .agg(Conteo=("Ben_directo", "sum"))
                     .reset_index().astype(str),
                     "x": "Conteo",
                     "y": "Entidad",
+                    "type_graph": "barchart",
                     "orientation": "h",
                     "color": "Ben_directo",
                     "title": "Number of directly and indirectly benefited teenager stuednts per state",
@@ -110,19 +120,23 @@ class DashboardAlcance(CreateDashboard):
             },
             "Reached Municipalities": {
                 "states": {
-                    "df": self.df.groupby(["Entidad", "Prioridad"])
-                    .aggregate({"Municipio": "nunique"})
-                    .reset_index(),
-                    "x": "Municipio",
+                    "df": self.df["municipios"],
+                    "x": "Municipio_Porcentaje",
                     "y": "Entidad",
+                    "type_graph": "barchart",
                     "orientation": "h",
                     "color": "Prioridad",
                     "title": "Number of benefited municipalities per state",
                     "xaxis_name": "Benefited municipalities",
                     "yaxis_name": "State",
                     "show_legend": True,
-                    "legend_name": "Municipality\nPriority",
-                    "legend_elements": None
+                    "legend_name": "Municipality Priority",
+                    "legend_translation": None
+                },
+                "legend": {
+                    "df": self.df["municipios_alcanzados"],
+                    "type_graph": "reached_municipalities_legend",
+                    "title": None
                 }
             }
         }
@@ -146,7 +160,6 @@ class DashboardAlcance(CreateDashboard):
         :return:
         """
 
-        # st.write(data)
         self.set_header("Beneficiaries")
 
         self.set_sidebar()
@@ -155,8 +168,8 @@ class DashboardAlcance(CreateDashboard):
             st.write("")
             data = self.graph_options[self.option][k]
             self.set_header(data["title"], type_header="subtitle")
-            st.plotly_chart(CreateGraphs(data).create_barchart())
+            CreateGraphs(data).set_plots_grid(type_graph=data["type_graph"])
 
 
 st.set_page_config(layout="wide")
-DashboardAlcance(ProcessData().read_data()["alcance"]).launch_dashboard()
+DashboardAlcance(ProcessData().read_data()).launch_dashboard()
