@@ -25,13 +25,14 @@ class DashboardOutcomes(CreateDashboard):
         self.graph_options = {
             "Outcome Graphs (Vertical)": {
                 "Professionals": {
-                    "df": self.df["educadores"],  # Data for educators
+                    # Data for educators
+                    "df": self.df["educadores"],
                     "x": "Medición inglés",  # X-axis measurement
                     "y": "D-cohen",  # Y-axis measurement
                     "type_graph": "barchart",  # Type of graph
                     "orientation": "v",  # Vertical orientation
                     "color": "Constructo",  # Color categorization
-                    "title": "Outcomes Graph: Professionals Groups 1 & 2",  # Title for the graph
+                    "title": "Outcomes Graph: Professional Development",  # Title for the graph
                     "text": "Significancia",  # Text to display on the graph
                     "text_dtype": "str",  # Data type of text
                     "xaxis_name": "Scale",  # Name of the x-axis
@@ -103,7 +104,7 @@ class DashboardOutcomes(CreateDashboard):
                     "type_graph": "barchart",
                     "orientation": "h",  # Horizontal orientation
                     "color": "Constructo",
-                    "title": "Outcomes Graph: Professionals Groups 1 & 2",
+                    "title": "Outcomes Graph: Professional Development",
                     "text": "D-cohen",
                     "text_dtype": "float",  # Text data type
                     "yaxis_name": "Scale",
@@ -121,7 +122,7 @@ class DashboardOutcomes(CreateDashboard):
                     "orientation": "h",
                     "order": None,
                     "color": "Constructo",
-                    "title": "Outcomes Graph: Systematic Leadership Training",
+                    "title": "Outcomes Graph: Systemic Leadership Training",
                     "text": "D-cohen",
                     "text_dtype": "float",
                     "yaxis_name": "Scale",
@@ -177,12 +178,65 @@ class DashboardOutcomes(CreateDashboard):
                     "low": "conf.low",  # Lower bound for confidence interval
                     "orientation": None,  # Orientation is not applicable for forest plots
                     "color": "Comportamiento",
-                    "title": "Detailed Outcomes Graph: Professionals Groups 1 & 2",
+                    "title": "Detailed Outcomes Graph: Professional Development",
                     "xaxis_name": "D-Cohen",
                     "yaxis_name": "Scale",
                     "legend_name": "Construct",  # Legend for the forest plot
-                    "line": "D-Cohen"
+                    "line": "D-Cohen",
+                    "legend_translation": "Comportamiento"
                 },
+                "Professionals_FLS": {
+                    "df": self.df["fls"],
+                    "disaggregate": "Constructo",
+                    "x": "D-cohen",
+                    "y": "Medición inglés_sig",
+                    "type_graph": "forest",  # Use forest plot for detailed outcomes
+                    "high": "conf.high",  # Upper bound for confidence interval
+                    "low": "conf.low",  # Lower bound for confidence interval
+                    "orientation": None,  # Orientation is not applicable for forest plots
+                    "color": "Comportamiento",
+                    "title": "Outcomes Graph: Systemic Leadership Training",
+                    "xaxis_name": "D-Cohen",
+                    "yaxis_name": "Scale",
+                    "legend_name": "Construct",  # Legend for the forest plot
+                    "line": "D-Cohen",
+                    "legend_translation": "Comportamiento"
+                },
+                "Teenagers_g1": {
+                    "df": self.df["estudiantes_g1"],
+                    "disaggregate": "Constructo",
+                    "x": "D-cohen",
+                    "y": "Medición inglés_sig",
+                    "type_graph": "forest",  # Use forest plot for detailed outcomes
+                    "high": "conf.high",  # Upper bound for confidence interval
+                    "low": "conf.low",  # Lower bound for confidence interval
+                    "orientation": None,  # Orientation is not applicable for forest plots
+                    "color": "Comportamiento",
+                    "title":  "Outcomes Graph: Teenagers Groups 1 & 2",
+                    "xaxis_name": "D-Cohen",
+                    "yaxis_name": "Scale",
+                    "legend_name": "Construct",  # Legend for the forest plot
+                    "line": "D-Cohen",
+                    "legend_translation": "Comportamiento"
+                },
+                "Teenagers_g2": {
+                    "df": self.df["estudiantes_g2"].query("Subanálisis == 'Todos-as 1+ CA' "
+                                                          "& Pre == 'inicial' & Post == 'final'"),
+                    "disaggregate": "Constructo",
+                    "x": "D-cohen",
+                    "y": "Medición inglés_sig",
+                    "type_graph": "forest",  # Use forest plot for detailed outcomes
+                    "high": "conf.high",  # Upper bound for confidence interval
+                    "low": "conf.low",  # Lower bound for confidence interval
+                    "orientation": None,  # Orientation is not applicable for forest plots
+                    "color": "Comportamiento",
+                    "title":  "Outcomes Graph: Teenagers Groups 3, 4 & 5",
+                    "xaxis_name": "D-Cohen",
+                    "yaxis_name": "Scale",
+                    "legend_name": "Construct",  # Legend for the forest plot
+                    "line": "D-Cohen",
+                    "legend_translation": "Comportamiento"
+                }
                 # Additional configurations for "Professionals_FLS", "Teenagers_g1", and "Teenagers_g2"
             },
             "Outcome Summary Table": {
@@ -198,7 +252,7 @@ class DashboardOutcomes(CreateDashboard):
                     "type_graph": "summary_table",  # Type set for summary table
                     "color_scale": "Comportamiento",  # Color scale used for table visualization
                     "title": "Outcome Summary Table",  # Title for the summary table
-                    "xaxis_name": ["Professionals: Groups 1 & 2", "Systemic Leadership Training",
+                    "xaxis_name": ["Professional Development", "Systemic Leadership Training",
                                    "Teenagers: Groups 1, 2 & 3", "Teenagers: Groups 4 & 5"]  # X-axis names for summary
                 }
             }
@@ -249,6 +303,9 @@ class DashboardOutcomes(CreateDashboard):
         for k in self.graph_options[self.option]:
             data = self.graph_options[self.option][k]  # Get data configuration for the current graph
             st.write(" ")  # Add a space for better visual separation
+            # st.write(data["df"])
+            if "df" in data and data["df"].empty:
+                continue
             # Set the subtitle header for the current graph
             self.set_header(data["title"], type_header="subtitle")
             # Create the graph using the specified configuration
