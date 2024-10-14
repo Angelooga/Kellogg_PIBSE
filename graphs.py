@@ -315,7 +315,7 @@ class CreateGraphs:
                 yanchor="bottom",  # Anchor the legend at the bottom
                 y=1.02,  # Position just above the plot area
                 xanchor="left",  # Anchor the legend to the left
-                x=0.3  # Position it more towards the center (on the right)
+                x=0.35  # Position it more towards the center (on the right)
             ),
             xaxis_title=self.aux_data["xaxis_name"],  # Set the x-axis title (e.g., 'Odds Ratio')
             **kwargs  # Apply any additional layout customizations passed via kwargs
