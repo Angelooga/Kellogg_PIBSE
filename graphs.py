@@ -20,7 +20,7 @@ class CreateGraphs:
         """
         self.data = data
         self.aux_data = defaultdict(lambda: None, data)
-        self.bg_color = "#F5F0EA"   # Default background color for charts
+        self.bg_color = "#F5F0EA"  # Default background color for charts
         self.legend_translations = {
             "Constructo": {
                 "Autoconocimiento": "Self awareness",
@@ -35,6 +35,12 @@ class CreateGraphs:
             "Ben_directo": {
                 "25": "Indirect",
                 "1": "Direct"
+            },
+            "Comportamiento": {
+                "Significativo/sentido esperado": "Statistically Significant/As Expected",
+                "No significativo/sentido esperado": "Not Statistically Significant/As Expected",
+                "Significativo/sentido contrario": "Statistically Significant/Contrary To Expectations",
+                "No significativo/sentido contrario": "Not Statistically Significant/Contrary To Expectations"
             }
         }
         # Color palettes for various categories
@@ -53,7 +59,7 @@ class CreateGraphs:
                 "Kellogg's Priority": "#22314E",
                 "Authorized Extension": "#4A5E7A",
                 "Other": "#A7B4CD",
-                "Not Reached":  "#FFFFFF"
+                "Not Reached": "#FFFFFF"
             },
             "Ben_directo": {
                 "25": "#A7B4CD",
@@ -78,8 +84,8 @@ class CreateGraphs:
                            "Aprendizaje socioemocional en la comunidad educativa"],
             "Prioridad": ["Kellogg's Priority", "Authorized Extension", "Other"],
             "Entidad": ["Campeche", "Quintana Roo", "Yucatán", "No data"],
-            "Tipo": ["Professionals", "Systemic Leadership Training", "Professionals/Systemic Leadership Training",
-                     "Teenagers"],
+            "Tipo": ["Professional Development", "Systemic Leadership Training",
+                     "Professional Development/Systemic Leadership Training", "Teenagers"],
             "Ben_directo": ["25", "1"]
         }
         # Settings for adding lines to charts (like D-Cohen effect size thresholds)
@@ -273,6 +279,18 @@ class CreateGraphs:
             # Add a vertical reference line (e.g., at odds ratio 1 or effect size 0)
             fig.add_vline(x=i, line_width=1, line_dash="dash", line_color="grey")
 
+        # Translate the legend labels if a translation is specified.
+        # For example, translating internal variable names to more readable labels for the chart's legend.
+        translate = self.aux_data["legend_translation"]
+        if translate in self.legend_translations:
+            # Get the translation mapping
+            new_names = self.legend_translations[translate]
+            # Update each trace (category) in the legend with the translated name.
+            fig.for_each_trace(lambda z: z.update(
+                name=new_names[z.name],  # Update the name
+                legendgroup=new_names[z.name]  # Update the group name in the legend
+            ))
+
         # Add annotations (e.g., notes for statistical significance) if provided.
         annotation = self.lines[type_line]["annotation"]
         for k, i in annotation.items():
@@ -293,11 +311,11 @@ class CreateGraphs:
             legend=dict(
                 # Customize the position and orientation of the legend
                 orientation="h",  # Horizontal legend
-                entrywidth=175,  # Set the width of each legend item
+                entrywidth=258,  # Set the width of each legend item
                 yanchor="bottom",  # Anchor the legend at the bottom
                 y=1.02,  # Position just above the plot area
                 xanchor="left",  # Anchor the legend to the left
-                x=0.6  # Position it more towards the center (on the right)
+                x=0.3  # Position it more towards the center (on the right)
             ),
             xaxis_title=self.aux_data["xaxis_name"],  # Set the x-axis title (e.g., 'Odds Ratio')
             **kwargs  # Apply any additional layout customizations passed via kwargs
@@ -308,8 +326,8 @@ class CreateGraphs:
     def create_summary_table(self):
         """
         Creates a summary table and visualizes it as a heatmap. The table merges multiple datasets on common columns
-        and adds significance and behavior labels to effect size (Cohen's D). The result is color-coded for easy interpretation
-        using a heatmap, with specific annotations for the table cells.
+        and adds significance and behavior labels to effect size (Cohen's D). The result is color-coded for easy
+        interpretation using a heatmap, with specific annotations for the table cells.
 
         :return: A Plotly heatmap figure object representing the summary table.
         """
@@ -338,8 +356,8 @@ class CreateGraphs:
 
         # If a legend translation for 'Constructo' exists, reorder and rename the values.
         if self.legend_translations["Constructo"] is not None:
-            # Get the desired order for 'Constructo' from legend translations.
-            order = self.legend_translations["Constructo"]
+            # Get the desired order for 'Constructo' from category orders.
+            order = self.category_orders["Constructo"]
 
             # Convert 'Constructo' to a categorical variable with the specified order, then sort it.
             merged["Constructo"] = pd.Categorical(merged["Constructo"], ordered=True, categories=order)
@@ -354,10 +372,10 @@ class CreateGraphs:
         # Encode values in the merged table for visualization in the heatmap.
         for col in merged.columns:
             encoded[col] = merged[col].apply(lambda x: 2 if "Significativo/sentido esperado" in str(x)
-                                             else 1 if "No significativo/sentido esperado" in str(x)
-                                             else -2 if "No significativo/sentido contrario" in str(x)
-                                             else -1 if "Significativo/sentido contrario" in str(x)
-                                             else x)
+            else 1 if "No significativo/sentido esperado" in str(x)
+            else -2 if "No significativo/sentido contrario" in str(x)
+            else -1 if "Significativo/sentido contrario" in str(x)
+            else x)
 
         # Define a helper function to format the table cells for annotation.
         def format_table(x):
@@ -400,7 +418,14 @@ class CreateGraphs:
                     "plot_bgcolor": self.bg_color})  # Set background color of the plot area.
 
         # Update layout settings: set figure height and position the x-axis labels at the top.
-        fig.update_layout(height=1200, xaxis=dict(side='top'))
+        fig.update_layout(height=1200, xaxis=dict(side='top'),
+                          font=dict(
+                              size=13.5
+                          )
+                          )
+
+        fig.update_xaxes(tickfont=dict(size=13.5))
+        fig.update_yaxes(tickfont=dict(size=13.5))
 
         return fig  # Return the final heatmap figure.
 
@@ -531,4 +556,3 @@ class CreateGraphs:
         else:  # If there is no disaggregate parameter.
             tile = st.columns(1)  # Create a single column layout.
             tile[0].container(border=True).plotly_chart(charts[type_graph]())  # Display the plot.
-

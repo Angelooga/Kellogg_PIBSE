@@ -149,12 +149,12 @@ class DashboardAlcance(CreateDashboard):
                     "legend_name": "Municipality Priority",
                     "legend_translation": None
                 },
-                "legend": {
-                    # Data for the legend of reached municipalities.
-                    "df": self.df["municipios_alcanzados"],
-                    "type_graph": "reached_municipalities_legend",
-                    "title": None
-                }
+                # "legend": {
+                #     # Data for the legend of reached municipalities.
+                #     "df": self.df["municipios_alcanzados"],
+                #     "type_graph": "reached_municipalities_legend",
+                #     "title": None
+                # }
             }
         }
 
