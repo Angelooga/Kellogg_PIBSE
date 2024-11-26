@@ -38,7 +38,7 @@ class ProcessData:
             },
             "estudiantes_g2": {
                 "key": "10fpv_VB6G0gV2E5V2wF8jzHl4xSdXrIMo3Mw4imftbk",
-                "sheetname": "Psicométricos con items inverso",
+                "sheetname": "Psicométricos FINALES con items inversos",
                 "type": "gsheets",
                 "engine": "calamine"
             },
